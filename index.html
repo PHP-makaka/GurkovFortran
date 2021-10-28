@@ -6,15 +6,49 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="style.css" rel="stylesheet">
-    <title>Document</title>
+    <title>Fortran</title>
 </head>
 <body>
-<div class="container">
 
-    <h2 id="test"alt="test">test</h2>
-    <h1 id="otvet"></h1>
-    <button id="btn" style="width: auto; height: 25%">ответ</button>
-    <script src="main.js"></script>
+<div style="max-width: 500px; margin-left: auto; margin-right: auto; padding: 15px;">
+    <h1 id="test" style="text-align: center;font-size: 1.7rem;font-weight:700;">Гурков Fortran Test</h1>
+
+    <h1>Введите значения температуры</h1>
+    <div class="text-field text-field_floating-3">
+        <input class="text-field__input" type="number" id="Temp" name="email" placeholder="значение температуры">
+        <label class="text-field__label" for="Temp">значение температуры</label>
+    </div>
+    <h1>Выберете температурную шкалу</h1>
+    <div id="radioTemt" name="radioTemt">
+        <input type="radio" id="C" name="drone" value="C" checked>
+        <label for="C">C</label>
+        <input type="radio" id="R" name="drone" value="R">
+        <label for="R">R</label>
+        <input type="radio" id="F" name="drone" value="F">
+        <label for="F">F</label>
+        <input type="radio" id="K" name="drone" value="K">
+        <label for="K">K</label>
+    </div>
+
+    <h1>Введите значение паросодержания</h1>
+    <div class="text-field text-field_floating-3">
+        <input class="text-field__input" type="number" id="alfa" name="alfa" placeholder="значение паросодержания">
+        <label class="text-field__label" for="alfa">значение паросодержания</label>
+    </div>
+    <h1>Выберете фронт охлаждения</h1>
+    <div id="radioTemt1" name="radioTemt1">
+        <input type="radio" id="up" name="drone1" value="верхний" checked>
+        <label for="up">верхний</label>
+        <input type="radio" id="down" name="drone1" value="нижний">
+        <label for="down">нижний</label>
+    </div>
+    <div class="otvet">
+        <h1 id="otvet"></h1>
+    </div>
+
+    <a href="#" id="run" class="button19">рассчитать</a>
+
 </div>
+<script src="main.js"></script>
 </body>
 </html>
