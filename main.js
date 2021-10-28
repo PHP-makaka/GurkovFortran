@@ -13,6 +13,7 @@ btn.addEventListener('click',runCalc)
 
 function runCalc(e){
     console.log('run')
+    e.preventDefault()
 
    let arr = Array.from(document.querySelectorAll('input')).filter(inputElement =>{
       if (inputElement.value==''){
