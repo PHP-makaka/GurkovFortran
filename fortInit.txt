@@ -1,0 +1,245 @@
+program Test
+character(1) tempScale	!содержит название температурной шкалы
+real temp, alfa		!значения температуры и паросодержания
+common /Scale/ tempScale	!
+common /TempValue/ temp		!
+common /AlfaValue/ alfa		!
+!character(1) flag			!
+byte iChart, iRegime_flow	!содержат информацию о карте и режиме течения
+common /Chart/ iChart
+common /Regime_flow/ iRegime_flow
+byte iRegime_heat_transfer	!хранит информацию о режиме теплообмена
+common /heat_transfer/ iRegime_heat_transfer
+integer n			!количество строк во входном файле
+k = 0
+! 	!создаётся устройство В/В и соединяется с файлом
+! 	open(1, file = 'Input.txt')
+! 	!цикл обработки входного файла (подсчёт числа строк)
+! 	do while (.not. eof(1))		
+! 		k = k + 1			!
+! 		read(1,*)			!ввод из файла (пустой список ввода)
+! 	end do					!
+! 	n = k - 1				!
+! 	rewind 1					!переход на начало файла
+! 	read(1,*)				!ввод из файла (пустой список ввода)
+! 	!ввод из файла температурной шкалы, температуры и паросодержания
+! 	read(1,*) tempScale, temp, alfa
+! 	!закрытие файла (отсоединение файла от устройства В/В)	
+! 	close(1)
+!вызов подпрограммы, в кот. производится анализ температурной шкалы		
+tempScale ='C'
+temp=600
+alfa=1
+! temp=600
+! alfa=1
+! temp=600
+! alfa=0.0025
+
+
+call Sub_1()
+!создается устройство В/В и соединяется с файлом				
+open(2, file = 'Output.txt')	
+if (iChart == 1) then			!вывод в файл текущей карты течения
+	write(2,*) 'Карта нормальных режимов течения'
+else
+	write(2,*) 'Карта режимов течения у "горячей стенки"'
+end if
+write(2,*) iRegime_flow
+select case (iRegime_flow)		!вывод в файл текущего режима течения
+	case (1)
+		write(2,*) 'Режим малого пузыря'
+	case (2)
+		write(2,*) 'малые пузыри в alfa=0.2,двыы'
+	case (3)
+		write(2,*) 'пенно-турбулентный режим'
+	case (4)
+		write(2,*) 'режим плёночного течения (возможен унос)'
+	case (5)
+		write(2,*) 'однофазный пар'
+	case (6)
+		write(2,*) 'режим скользящей плёнки (возможен унос)'
+	case (7)
+		write(2,*) 'режим верхнего затопления'
+	case (8)
+		write(2,*) 'обращённо-кольцевой режим'
+	case (9)
+		write(2,*) 'режим течения жидких кластеров (возможен унос)'
+end select
+
+select case (iRegime_heat_transfer) !вывод в файл режима теплообмена
+	case (1)
+		write(2,*) 'Одна фаза: пар'
+	case (2)
+		write(2,*) 'Дисперсное течение пленочное кипение (DFFB)'
+	case (3)
+		write(2,*) 'Переход от (DFFB) к обращенно-кольцевому'
+	case (4)
+		write(2,*) 'Переход к (DFFB)'
+	case (5)
+		write(2,*) 'Одна фаза: пар'
+	case (6)
+		write(2,*) 'Переходное кипение'
+	case (7)
+		write(2,*) 'Переохлажденное пузырьковое кипение'
+	case (8)
+		write(2,*) 'Пузырьковое кипение'
+	case (9)
+		write(2,*) 'Одна фаза: жидкость'
+end select
+close(2)	!закрытие файла (отсоединение файла от устройства В/В)
+end program Test
+
+
+
+
+subroutine Sub_1()
+character(1) tempScale
+real temp, alfa, temp1, alfa1
+common /Scale/ tempScale
+common /TempValue/ temp
+common /AlfaValue/ alfa
+common /tempC/ temp1
+common /alfaC/ alfa1
+byte iChart, iRegime_flow
+common /Chart/ iChart
+common /Regime_flow/ iRegime_flow
+temp1 = temp
+alfa1 = alfa
+!анализ температурной шкалы
+select case(tempScale)
+	!если шкала Цельсия, то ничего не делаем
+	case('C')
+	!если шкала Реомюра, то перевод в шкалу Цельсия
+	case('R')
+		temp1 = (5.0/4.0)*temp1
+	!если шкала Фаренгейта, переводим в градусы Цельсия
+	case('F')		
+		temp1 = (5.0/9.0)*(temp1 - 32.0)
+	!если шкала Кельвина, переводим в градусы Цельсия
+	case('K')
+		temp1 = temp1 - 273.15			
+end select
+!В зависимости от значения температуры происходит выбор карты течения
+if (temp1 < 550) then	
+	iChart = 1		!1 - карта нормальных режимов течения
+	call Sub_2()		!Выбор режима течения
+else
+	iChart = 2		!2 - карта режимов течения у горячей стенки
+	call Sub_3()		!Выбор режима течения
+end if
+call Sub_4()			!Выбор режима теплообмена
+end subroutine Sub_1
+
+
+subroutine Sub_2()
+common /tempC/ temp1
+common /alfaC/ alfa1
+byte iRegime_flow
+common /Regime_flow/ iRegime_flow
+alfavCRIT = 0.7			!значение критического паросодержания
+if (alfa1 <= 0.2) then
+	iRegime_flow = 1		!режим малого пузыря
+else if (alfa1 <= 0.5) then
+!малые пузыри в alfa1=0.2, остальной парсоставляют большие пузыри
+	iRegime_flow = 2			
+else if (alfa1 < alfavCRIT) then
+	iRegime_flow = 3		!пенно-турбулентный режим
+else if (alfa1 < 1.0) then
+	iRegime_flow = 4		!режим плёночного течения
+else
+	iRegime_flow = 5		!однофазный пар
+end if
+end subroutine Sub_2
+
+
+
+subroutine Sub_3()
+common /tempC/ temp1
+common /alfaC/ alfa1
+real Tsat
+common /saturation_temp/ Tsat
+byte iRegime_flow
+common /Regime_flow/ iRegime_flow
+character(8) cool_front
+common /coolling_front/ cool_front
+open(1, file = 'Input_heat.txt')
+cool_front ='верхний' 
+close(1)
+Tsat = 370.0
+if (cool_front == 'верхний') then
+	if (alfa1 > 0.8) then
+		iRegime_flow = 6		!режим скользящей плёнки
+	else
+		iRegime_flow = 7		!режим верхнего затопления
+	end if
+else if (cool_front == 'нижний') then
+	if (temp1 < Tsat) then		!жидкость переохлаждена?
+		iRegime_flow = 8		!обращённо-кольцевой режим
+	else
+		iRegime_flow = 9		!режим течения жидких кластеров
+	end if
+end if
+end subroutine Sub_3
+
+
+subroutine Sub_4()
+common /TempValue/ temp
+common /AlfaValue/ alfa	
+real alfaLIQ
+common /alfa_liq/ alfaLIQ
+real Tchf, Tmin, Tsat, Tliq
+common /saturation_temp/ Tsat
+common /t_chf/ Tchf
+common /t_min/ Tmin
+common /t_liq/ Tliq
+byte iRegime_heat_transfer
+common /heat_transfer/ iRegime_heat_transfer
+Tchf = 600.0
+Tmin = 550.0
+Tsat = 370.0
+Tliq = 400.0
+alfaLIQ = 0.1
+write(*,*) iRegime_heat_transfer
+if (alfa > 0.9999) then
+	!однофазный пар
+	iRegime_heat_transfer = 1
+else
+	if (temp > Tmin) then
+		if (alfa > 0.8) then
+			!дисперсное течение пленочное кипение DFFB
+			iRegime_heat_transfer = 2
+		else
+			!переход от DFFB к обращенно-кольцевому
+			iRegime_heat_transfer = 3
+		end if
+	else
+		if (alfaLIQ > 0.0025) then
+			if (temp > Tchf) then
+				!переход к DFFB
+				iRegime_heat_transfer = 4
+			else
+				!однофазный пар
+				iRegime_heat_transfer = 5
+			end if
+		else
+			if (temp > Tchf) then
+				!переходное кипение
+				iRegime_heat_transfer = 6
+			else
+				if (temp > Tmin) then
+					if (Tliq > Tsat) then
+						!переохлажденное пузырьковое кипение
+						iRegime_heat_transfer = 7
+					else
+						!пузырьковое кипение
+						iRegime_heat_transfer = 8
+					end if
+				else
+					!однофазная жидкость
+					iRegime_heat_transfer = 9
+				end if
+			end if
+		end if
+	end if
+end if
+end subroutine Sub_4
