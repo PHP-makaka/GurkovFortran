@@ -185,6 +185,10 @@ a.button19 {
     border-radius: 12px;
     padding: 3%;
     border: solid 1px #ffffffc2;
-    background-color: #03a9f433;
+    background-color: #21ff0080;
+}
+hr{
+    height: 5px;
+    background-color: black;
 }
 

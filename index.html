@@ -1,3 +1,5 @@
+<!--ИНТЕРФЕЙС ПРОГРАММЫ-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,15 +11,64 @@
     <title></title>
 </head>
 <body>
+<h1 style="text-align: center;font-size: 2rem;font-weight:700;">Расчёт реперных точек</h1>
+<div style="width: 60% ;background-color: #31a2eb4f; height: 100vh">
+    <div style="max-width: 500px; margin-left: auto; margin-right: auto; padding: 15px;position: absolute;left: 0;">
+        <!--    <h1 id="test" style="text-align: center;font-size: 1.7rem;font-weight:700;">Рассчёт реперных точек</h1>-->
+        <div>
+            <div style="background-color: #bff3bf">
 
-<div style="max-width: 500px; margin-left: auto; margin-right: auto; padding: 15px;">
-    <h1 id="test" style="text-align: center;font-size: 1.7rem;font-weight:700;">Рассчёт температуры насыщения</h1>
+                <input type="radio" id="sterzhen" name="drone1" value='для пучков стержней'>
+                <label for="sterzhen">пучок</label>
+                <h1>Значение наружного диамера стержня (dtvel)</h1>
+                <input class="text-field__input1" type="number" id="dTvel" name="email" placeholder="">
+                <h1>шаг (stvel)</h1>
+                <input class="text-field__input1" type="number" id="sTvel" name="email" placeholder="">
 
-    <h1>Введите значение давления</h1>
-    <div class="text-field text-field_floating-3">
-        <input class="text-field__input" type="number" id="Temp" name="email" placeholder="значение давления">
-<!--        <label class="text-field__label" for="Temp">значение давления 10^5</label>-->
-        <div id="radioTemt" name="radioTemt">
+                <h1>Выберете тип решётки</h1>
+                <input type="radio" id="treygolnik" name="drone3" value='Треугольная'>
+                <label for="treygolnik">Треугольная</label>
+                <input type="radio" id="kvadrat" name="drone3" value='Квадратная'>
+                <label for="kvadrat">Квадрантная</label>
+
+                <br><br>
+            </div>
+            <hr>
+            <br>
+            <div style="background-color: #ff181875">
+                <input type="radio" id="tryba" name="drone1" value='для труб'>
+                <label for="tryba">труба</label>
+                <h1>Значение гидравлического диаметра ДУ</h1>
+                <input class="text-field__input1" type="number" id="dH" name="email" placeholder="">
+                <br>
+                <br>
+            </div>
+            <br>
+
+
+        </div>
+
+    </div>
+    <div style="background-color: #f7cb126b; width: 500px;position: absolute;right:40%;top: 100px">
+        <div>
+            <h1>Введите значение G</h1>
+            <input class="text-field__input1" type="number" id="G" name="email">
+        </div>
+        <h1>Введите тип течения</h1>
+        <input type="radio" id="vosxod" name="drone4" value='для восходящего течения'>
+        <label for="vosxod">для восходящего течения</label>
+        <input type="radio" id="nisxod" name="drone4" value='для нисходящего течения'>
+        <label for="nisxod">для нисходящего течения</label>
+        <br>
+        <br>
+        <h1>Введите значение давления</h1>
+        <div class="text-field text-field_floating-3">
+
+            <input class="text-field__input" type="number" id="press" name="email" placeholder="значение давления">
+            <!--        <label class="text-field__label" for="Temp">значение давления 10^5</label>-->
+
+
+            <div id="radioTemt" name="radioTemt">
                 <input type="radio" id="C" name="drone" value=5 checked>
                 <label for="C">*10^5</label>
                 <input type="radio" id="R" name="drone" value=6>
@@ -25,37 +76,16 @@
                 <input type="radio" id="F" name="drone" value=7>
                 <label for="F">*10^7</label>
             </div>
+        </div>
+
+
     </div>
-<!--    <h1>Выберете температурную шкалу</h1>-->
-<!--    <div id="radioTemt" name="radioTemt">-->
-<!--        <input type="radio" id="C" name="drone" value="C" checked>-->
-<!--        <label for="C">C</label>-->
-<!--        <input type="radio" id="R" name="drone" value="R">-->
-<!--        <label for="R">R</label>-->
-<!--        <input type="radio" id="F" name="drone" value="F">-->
-<!--        <label for="F">F</label>-->
-<!--        <input type="radio" id="K" name="drone" value="K">-->
-<!--        <label for="K">K</label>-->
-<!--    </div>-->
+    <a href="#" id="run" class="button19" style="position: absolute;top:523px">рассчитать</a>
+</div>
 
-<!--    <h1>Введите значение паросодержания</h1>-->
-<!--    <div class="text-field text-field_floating-3">-->
-<!--        <input class="text-field__input" type="number" id="alfa" name="alfa" placeholder="значение паросодержания">-->
-<!--        <label class="text-field__label" for="alfa">значение паросодержания</label>-->
-<!--    </div>-->
-<!--    <h1>Выберете фронт охлаждения</h1>-->
-<!--    <div id="radioTemt1" name="radioTemt1">-->
-<!--        <input type="radio" id="up" name="drone1" value="верхний" checked>-->
-<!--        <label for="up">верхний</label>-->
-<!--        <input type="radio" id="down" name="drone1" value="нижний">-->
-<!--        <label for="down">нижний</label>-->
-<!--    </div>-->
-    <div class="otvet">
-        <h1 id="otvet"></h1>
-    </div>
-
-    <a href="#" id="run" class="button19">рассчитать</a>
-
+<div class="otvet" style="position: absolute;right: 0;top:0;width: 40%">
+    <h2>Полученные результаты:</h2>
+    <h1 id="otvet"></h1>
 </div>
 <script src="main.js"></script>
 </body>
